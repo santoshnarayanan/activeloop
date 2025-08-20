@@ -7,7 +7,8 @@ This project uses the latest packages and libraries, so the code may differ from
 
 ## Folder Structure
 1. `LangChain101` - Contains code from the LangChain101.
-2. `LLMAndLangChain` - Coe from  -- Quick Intro to LLM.
+2. `LLMAndLangChain` - Contains code from  -- Quick Intro to LLM.
+3. `BuildAppLLMsAndLangChain` - Contains code from  -- Building Applications Powered by LLMs with LangChain.
 
 ---
 
