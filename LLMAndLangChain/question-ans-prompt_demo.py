@@ -1,23 +1,22 @@
-from dotenv import load_dotenv
-import os
-load_dotenv()
-
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
+from langchain_huggingface import HuggingFacePipeline
 from langchain_core.prompts import PromptTemplate
-from langchain_huggingface import HuggingFaceEndpoint
 
-prompt = PromptTemplate.from_template("Question: {question}\nAnswer:")
+tok = AutoTokenizer.from_pretrained("google/flan-t5-base")
+mdl = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base")
 
-question = "What is the capital of France?"
-
-llm = HuggingFaceEndpoint(
-    repo_id="google/flan-t5-base",
-    task="text2text-generation",  # Correct task for T5 models
-    temperature=0.0,
-    max_new_tokens=64,
-    huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_API_TOKEN"),
+pipe = pipeline(
+    "text2text-generation",
+    model=mdl,
+    tokenizer=tok,
+    max_new_tokens=8,     # short factual answer
+    num_beams=5,          # <-- more reliable than sampling
+    do_sample=False,      # deterministic
 )
-response = (prompt | llm).invoke({"question": question})
-print("Answer:", response)
 
+prompt = PromptTemplate.from_template(
+    "Answer with the capital city only.\nQuestion: What is the capital of France?\nAnswer:"
+)
 
-
+llm = HuggingFacePipeline(pipeline=pipe)
+print((prompt | llm).invoke({}))   # expected: "Paris"
