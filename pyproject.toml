@@ -103,6 +103,7 @@ dependencies = [
     "pysocks==1.7.1",
     "python-dateutil==2.9.0.post0",
     "python-dotenv==1.1.1",
+    "pyvis>=0.3.2",
     "pyyaml==6.0.2",
     "regex==2025.7.34",
     "requests==2.32.4",
