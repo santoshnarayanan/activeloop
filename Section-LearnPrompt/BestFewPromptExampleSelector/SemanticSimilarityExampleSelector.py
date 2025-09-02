@@ -1,10 +1,9 @@
 from dotenv import load_dotenv
-from langchain.prompts.example_selector import SemanticSimilarityExampleSelector
-from langchain_openai import OpenAIEmbeddings
-from langchain_core.prompts import PromptTemplate
 from langchain.prompts import FewShotPromptTemplate
+from langchain.prompts.example_selector import SemanticSimilarityExampleSelector
+from langchain_core.prompts import PromptTemplate
 from langchain_deeplake import DeeplakeVectorStore
-import os, shutil
+from langchain_openai import OpenAIEmbeddings
 
 load_dotenv()
 
@@ -30,6 +29,9 @@ dataset_path = f"hub://{my_activeloop_org_id}/{my_activeloop_dataset_name}"
 # if os.path.exists(dataset_path): shutil.rmtree(dataset_path)
 
 embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
+
+# Create DeepLake vector store (new way)
+db = DeeplakeVectorStore(dataset_path=dataset_path, embedding_function=embeddings)
 
 example_selector = SemanticSimilarityExampleSelector.from_examples(
     examples=examples,
