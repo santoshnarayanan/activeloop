@@ -30,8 +30,25 @@ dataset_path = f"hub://{my_activeloop_org_id}/{my_activeloop_dataset_name}"
 
 embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
 
-# Create DeepLake vector store (new way)
-db = DeeplakeVectorStore(dataset_path=dataset_path, embedding_function=embeddings)
+# --- Create the vector store (handle param name differences across versions)
+try:
+    db = DeeplakeVectorStore(dataset_path=dataset_path, embedding=embeddings)
+except TypeError:
+    db = DeeplakeVectorStore(dataset_path=dataset_path, embedding_function=embeddings)
+
+# --- ADD DATA: write the few-shot examples into the dataset ---
+texts = [eg["input"] for eg in examples]
+metadatas = [{"label": "fewshot", "output": eg["output"]} for eg in examples]
+ids = [f"eg-{i}" for i in range(len(examples))]  # optional but handy
+
+# This triggers OpenAI embedding calls and stores vectors+metadata in Deep Lake
+db.add_texts(texts=texts, metadatas=metadatas, ids=ids)
+
+# (Optional) sanity-check retrieval
+hits = db.similarity_search("35°C", k=2)
+print("Similarity search results (top 2):")
+for i, doc in enumerate(hits, 1):
+    print(f"{i}. text={doc.page_content!r}, meta={doc.metadata}")
 
 example_selector = SemanticSimilarityExampleSelector.from_examples(
     examples=examples,
