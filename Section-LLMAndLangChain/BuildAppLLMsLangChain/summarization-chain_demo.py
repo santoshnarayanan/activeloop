@@ -15,8 +15,9 @@ llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
 summarization_chain = load_summarize_chain(llm)
 
 # load the document using PyPDFLoader
-current_dir = os.path.dirname(os.path.abspath(__file__))
-pdf_path = os.path.join(os.path.dirname(current_dir), 'data', 'The One Page Linux Manual.pdf')
+# current_dir = os.path.dirname(os.path.abspath(__file__))
+# pdf_path = os.path.join(os.path.dirname(current_dir), 'data', 'The One Page Linux Manual.pdf')
+pdf_path = "/home/santoshn/Projects/AI/activeloop-ai/data/The One Page Linux Manual.pdf"
 loader = PyPDFLoader(pdf_path)
 documents = loader.load()
 
