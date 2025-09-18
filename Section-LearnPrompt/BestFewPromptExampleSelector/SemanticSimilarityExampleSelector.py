@@ -32,7 +32,7 @@ embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
 
 # --- Create the vector store (handle param name differences across versions)
 try:
-    db = DeeplakeVectorStore(dataset_path=dataset_path, embedding=embeddings)
+    db = DeeplakeVectorStore(dataset_path=dataset_path, embedding_function=embeddings)
 except TypeError:
     db = DeeplakeVectorStore(dataset_path=dataset_path, embedding_function=embeddings)
 
